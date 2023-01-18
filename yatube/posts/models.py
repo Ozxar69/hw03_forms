@@ -45,4 +45,3 @@ class Post(models.Model):
     class Meta:
         """Сортировка по дате публикации"""
         ordering = ['-pub_date']
-
