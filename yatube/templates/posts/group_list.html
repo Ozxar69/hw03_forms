@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+  Записи группы {{ group.title }}
+{% endblock %}
+{% block content %}
+  <h1>{{ group.title }}</h1>
+  <p>{{ group.description }}</p>
+	{% include 'posts/paginator.html' %}
+  {% for post in posts %}
+    <article>
+      {% include 'posts/post.html' %}
+			<article>
+				<a href="{% url 'posts:post_detail' post_id=post.id %}">
+					подробная информация</a>
+			</article>
+        {% if not forloop.last %}<hr>{% endif %}
+    </article>
+  {% endfor %}
+	{% include 'posts/paginator.html' %}
+  <a href="{% url 'posts:main_paige' %}">На главную страницу</a>
+{% endblock %}
