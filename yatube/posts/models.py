@@ -38,10 +38,11 @@ class Post(models.Model):
         related_name='posts'
     )
 
+    class Meta:
+        """Сортировка по дате публикации"""
+        ordering = ['-pub_date']
+
     def __str__(self):
         """Выводим текст поста"""
         return self.text
 
-    class Meta:
-        """Сортировка по дате публикации"""
-        ordering = ['-pub_date']

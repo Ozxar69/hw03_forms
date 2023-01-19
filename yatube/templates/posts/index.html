@@ -6,20 +6,18 @@
   <h1>
     Последние обновления на сайте
   </h1>
-  {% include 'posts/paginator.html' %}
+  {% include 'includes/paginator.html' %}
   {% for post in page_obj %}
+    {% include 'includes/post.html' %}
     <article>
-      {% include 'posts/post.html' %}
-      <article>
-        <a href="{% url 'posts:post_detail' post_id=post.id %}">
-          подробная информация</a>
-      </article>
-      {% if post.group %}
-        <a href="{% url 'posts:group_list' post.group.slug %}">
-          все записи группы: {{ post.group.title }}</a>
-      {% endif %}
-      {% if not forloop.last %}<hr>{% endif %}
+      <a href="{% url 'posts:post_detail' post_id=post.id %}">
+        подробная информация</a>
     </article>
+    {% if post.group %}
+      <a href="{% url 'posts:group_list' post.group.slug %}">
+        все записи группы: {{ post.group.title }}</a>
+    {% endif %}
+  {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
-  {% include 'posts/paginator.html' %}
+  {% include 'includes/paginator.html' %}
 {% endblock %}
