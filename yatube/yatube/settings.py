@@ -122,6 +122,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 NUMBER_OF_POSTS_ON_PAGE = 10
+NUMBER_OF_SYMBOLS = 15
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:main_paige'
