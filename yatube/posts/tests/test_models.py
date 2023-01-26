@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.conf import settings
 
 from ..models import Group, Post
 
@@ -23,9 +24,10 @@ class PostModelTest(TestCase):
 
     def test_models_have_correct_object_names(self):
         """Проверяем, что у моделей корректно работает __str__."""
-        post = PostModelTest.post
-        post_text = post.text[:15]
-        self.assertEqual(str(post_text), post.text[:15])
+        error_name = f"Вывод не имеет {settings.NUMBER_OF_SYMBOLS} символов"
+        self.assertEqual(self.post.__str__(),
+                         self.post.text[:settings.NUMBER_OF_SYMBOLS],
+                         error_name)
 
     def test_models_have_correct_object_title(self):
         """Проверяем group.title."""

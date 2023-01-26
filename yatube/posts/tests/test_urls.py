@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 
+from http import HTTPStatus
+
 from ..models import Post, Group
 
 User = get_user_model()
@@ -10,10 +12,14 @@ class PostsURLTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.guest_client = Client()
         cls.user = User.objects.create_user(username='Phantomas')
+        cls.authorized_client = Client()
+        cls.authorized_client.force_login(cls.user)
         cls.post = Post.objects.create(
             text='Тестовый текст',
             author=cls.user,
+            id=1,
         )
         cls.group = Group.objects.create(
             title='Тестовая группа',
@@ -21,11 +27,18 @@ class PostsURLTests(TestCase):
             description='Тестовое описание',
         )
 
-    def setUp(self):
-        self.guest_client = Client()
-        # self.user = User.objects.create_user(username='author')
-        self.authorized_client = Client()
-        self.authorized_client.force_login(self.user)
+    def test_page_url(self) -> None:
+        """Страница доступка по URL."""
+        pages: tuple = (
+            '/',
+            f'/group/{self.group.slug}/',
+            f'/profile/{self.user}/',
+            f'/posts/{self.post.id}/',
+        )
+        for page in pages:
+            response = self.guest_client.get(page)
+            error_name: str = f'Ошибка: нет доступа до страницы {page}'
+            self.assertEqual(response.status_code, HTTPStatus.OK, error_name)
 
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
@@ -33,21 +46,26 @@ class PostsURLTests(TestCase):
             '/': 'posts/index.html',
             f'/group/{self.group.slug}/': 'posts/group_list.html',
             f'/profile/{self.user}/': 'posts/profile.html',
-            f'/posts/{self.post.id}/': 'posts/post.detail.html',
+            f'/posts/{self.post.id}/': 'posts/post_detail.html',
+            '/create/': 'posts/create_post.html',
+            f'/posts/{self.post.id}/edit/': 'posts/create_post.html'
         }
-        for template, address in templates_url_names.items():
+        for address, template in templates_url_names.items():
             with self.subTest(address=address):
                 response = self.authorized_client.get(address)
-                self.assertTemplateUsed(response, template)
+                error_name: str = f'Ошибка: {address} ожидал шаблон {template}'
+                self.assertTemplateUsed(response, template, error_name)
 
-    def test_authorized_urls_uses_correct_create(self):
-        response = self.authorized_client.get('/create/')
-        self.assertEqual(response, 'posts/create_post.html')
-
-    def test_authorized_urls_uses_correct_edit(self):
-        response = self.authorized_client.get('/posts/1/edit')
-        self.assertEqual(response, 'posts/create_post.html')
+    def test_urls_authorized_client(self):
+        """Доступ авторизованного пользователя"""
+        pages: tuple = ('/create/',
+                        f'/posts/{self.post.id}/edit/')
+        for page in pages:
+            response = self.authorized_client.get(page)
+            error_name = f'Ошибка: нет доступа до страницы {page}'
+            self.assertEqual(response.status_code, HTTPStatus.OK, error_name)
 
     def test_url_unexisting(self):
         response = self.guest_client.get('/unexisting_page/')
-        self.assertEqual(response.status_code, 404)
+        error_name = f'Ошибка: не известная страница unexisting_page'
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND, error_name)

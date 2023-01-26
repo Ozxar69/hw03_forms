@@ -53,4 +53,4 @@ class Post(models.Model):
 
     def __str__(self):
         """Выводим текст поста"""
-        return self.text[:15]
+        return self.text[:settings.NUMBER_OF_SYMBOLS]
