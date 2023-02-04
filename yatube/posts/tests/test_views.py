@@ -74,7 +74,8 @@ class PostModelTest(TestCase):
     def test_profile_page_show_correct_context(self):
         """Шаблон profile сформирован с правильным контекстом."""
         response = self.authorized_client.get(
-            reverse('posts:profile', kwargs={'username': f'{self.user.username}'}))
+            reverse('posts:profile',
+                    kwargs={'username': f'{self.user.username}'}))
         first_object = response.context['page_obj'][0]
         form_fields = {
             first_object.text: self.post.text,
@@ -191,8 +192,10 @@ class PaginatorViewsTest(TestCase):
         для авторизованного пользователя и не авторизованного."""
         pages: tuple = (
             reverse('posts:main_paige'),
-            reverse('posts:group_list', kwargs={'slug': f'{self.group.slug}'}),
-            reverse('posts:profile', kwargs={'username': f'{self.user.username}'})
+            reverse('posts:group_list',
+                    kwargs={'slug': f'{self.group.slug}'}),
+            reverse('posts:profile',
+                    kwargs={'username': f'{self.user.username}'})
         )
         for page in pages:
             response1 = self.authorized_client.get(page)
@@ -214,11 +217,13 @@ class PaginatorViewsTest(TestCase):
                       f'должно быть'
                       f'{TEST_OF_POSTS -settings.NUMBER_OF_POSTS_ON_PAGE}')
             count2 = TEST_OF_POSTS - settings.NUMBER_OF_POSTS_ON_PAGE
-            self.assertEqual(count_posts1, settings.NUMBER_OF_POSTS_ON_PAGE, error1),
+            self.assertEqual(count_posts1,
+                             settings.NUMBER_OF_POSTS_ON_PAGE, error1),
             self.assertEqual(count_posts2,
                              count2,
                              error2),
-            self.assertEqual(count_posts3, settings.NUMBER_OF_POSTS_ON_PAGE, error3),
+            self.assertEqual(count_posts3,
+                             settings.NUMBER_OF_POSTS_ON_PAGE, error3),
             self.assertEqual(count_posts4,
                              count2,
                              error4)

@@ -35,7 +35,8 @@ class PostForm(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTrue(Post.objects.filter(text='Test text',
                                             group=self.group.id,
-                                            author=self.user,).exists(), error1)
+                                            author=self.user,
+                                            ).exists(), error1)
         error2 = 'Пост не добавлен в БД'
         self.assertEqual(Post.objects.count(), count + 1, error2)
 

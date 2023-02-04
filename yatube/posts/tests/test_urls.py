@@ -67,5 +67,6 @@ class PostsURLTests(TestCase):
 
     def test_url_unexisting(self):
         response = self.guest_client.get('/unexisting_page/')
-        error_name = f'Ошибка: не известная страница unexisting_page'
-        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND, error_name)
+        error_name = 'Ошибка: не известная страница unexisting_page'
+        self.assertEqual(response.status_code,
+                         HTTPStatus.NOT_FOUND, error_name)
