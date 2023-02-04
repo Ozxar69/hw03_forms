@@ -8,7 +8,7 @@ from .models import Post, Group, User
 from .forms import PostForm
 
 
-def paginator(post_list, request):
+def paginate(post_list, request):
     paginator_func = Paginator(post_list, settings.NUMBER_OF_POSTS_ON_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator_func.get_page(page_number)
@@ -19,7 +19,7 @@ def index(request):
     """Передаёт в шаблон posts/index.html
     десять последних объектов модели Post."""
     post_list = Post.objects.all()
-    page_obj = paginator(post_list, request)
+    page_obj = paginate(post_list, request)
     context = {
         'page_obj': page_obj,
     }
@@ -31,7 +31,7 @@ def group_posts(request, slug):
      десять последних объектов модели Post."""
     group = get_object_or_404(Group, slug=slug)
     post_list = group.posts.all()
-    page_obj = paginator(post_list, request)
+    page_obj = paginate(post_list, request)
     context = {
         'group': group,
         'page_obj': page_obj,
@@ -43,7 +43,7 @@ def profile(request, username):
     """Страница пользователя."""
     author = get_object_or_404(User, username=username)
     post_list = author.posts.all()
-    page_obj = paginator(post_list, request)
+    page_obj = paginate(post_list, request)
     context = {
         'author': author,
         'page_obj': page_obj,

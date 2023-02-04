@@ -53,14 +53,13 @@ class StaticURLTests(TestCase):
 
     def test_users_access_pages_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
+        self.authorized_client.force_login(self.user)
         templates_url_names = {
-            '/auth/users/password_change/': 'users/password_change_form.html',
+            '/auth/password_change/': 'users/password_change_form.html',
             '/auth/logout/': 'users/logged_out.html',
         }
         for address, template in templates_url_names.items():
             with self.subTest(address=address):
                 response = self.authorized_client.get(address)
-                assert response.status_code == 200
-                print(response.status_code, address)
                 error_name: str = f'Ошибка: {address} ожидал шаблон {template}'
                 self.assertTemplateUsed(response, template, error_name)

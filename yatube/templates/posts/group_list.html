@@ -8,10 +8,8 @@
 	{% include 'includes/paginator.html' %}
   {% for post in page_obj %}
     {% include 'includes/post.html' %}
-		<article>
-			<a href="{% url 'posts:post_detail' post_id=post.id %}">
-				подробная информация</a>
-		</article>
+      <a href="{% url 'posts:post_detail' post_id=post.id %}">
+          подробная информация</a>
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
 	{% include 'includes/paginator.html' %}
