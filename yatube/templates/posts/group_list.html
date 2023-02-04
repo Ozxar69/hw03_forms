@@ -5,13 +5,13 @@
 {% block content %}
   <h1>{{ group.title }}</h1>
   <p>{{ group.description }}</p>
-	{% include 'includes/paginator.html' %}
+  {% include 'includes/paginator.html' %}
   {% for post in page_obj %}
     {% include 'includes/post.html' %}
       <a href="{% url 'posts:post_detail' post_id=post.id %}">
           подробная информация</a>
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
-	{% include 'includes/paginator.html' %}
+  {% include 'includes/paginator.html' %}
   <a href="{% url 'posts:main_paige' %}">На главную страницу</a>
 {% endblock %}
